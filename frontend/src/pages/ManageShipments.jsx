@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { ref, onValue, push, remove, set } from 'firebase/database';
 import { db } from '../firebase';
 import Layout from '../components/Layout';
@@ -300,7 +300,7 @@ const ManageShipments = () => {
 
                         <button 
                             type="submit"
-                            className="w-full bg-zinc-100 hover:bg-white text-black font-black uppercase text-xs py-4 rounded-xl transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2"
+                            className="w-full bg-[var(--accent-primary)] hover:bg-[var(--accent-hover)] text-white font-black uppercase text-xs py-4 rounded-xl transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2"
                         >
                             <Send className="w-4 h-4" /> Deploy Asset
                         </button>
@@ -329,7 +329,7 @@ const ManageShipments = () => {
                             {shipments.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center p-10 text-center space-y-4">
                                     <div className="w-16 h-16 rounded-full bg-[var(--bg-tertiary)] border border-[var(--border-primary)] flex items-center justify-center">
-                                        <Package className="w-8 h-8 text-zinc-700" />
+                                        <Package className="w-8 h-8 text-[var(--text-muted)]" />
                                     </div>
                                     <div>
                                         <h4 className="text-[var(--text-primary)] font-black uppercase tracking-widest text-xs">Registry Empty</h4>
@@ -346,7 +346,7 @@ const ManageShipments = () => {
                                             <th className="px-6 py-3 text-right">Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-zinc-900">
+                                    <tbody className="divide-y divide-[var(--border-primary)]">
                                         {shipments.map(s => (
                                             <tr key={s.id} className="hover:bg-[var(--bg-tertiary)]/30 group transition-colors">
                                                 <td className="px-6 py-4">
@@ -363,7 +363,7 @@ const ManageShipments = () => {
                                                 <td className="px-6 py-4">
                                                     {s.driverEmail ? (
                                                         <div>
-                                                            <p className="text-xs text-zinc-300">{s.driverName}</p>
+                                                            <p className="text-xs text-[var(--text-secondary)]">{s.driverName}</p>
                                                             <p className="text-[10px] text-[var(--text-tertiary)]">{s.driverEmail}</p>
                                                         </div>
                                                     ) : (
@@ -394,3 +394,5 @@ const ManageShipments = () => {
 };
 
 export default ManageShipments;
+
+

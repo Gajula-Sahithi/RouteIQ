@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../firebase';
 import Layout from '../components/Layout';
@@ -30,7 +30,7 @@ const CarbonReport = () => {
             <h1 className="text-3xl font-black text-[var(--text-primary)] tracking-tighter">Sustainability Ledger</h1>
             <p className="text-[10px] text-[var(--text-tertiary)] font-bold uppercase tracking-[0.3em] mt-1">Neural ESG Intelligence tracking</p>
           </div>
-          <button className="flex items-center gap-3 bg-white text-black hover:bg-zinc-200 px-6 py-3.5 rounded-xl transition-all font-bold text-xs shadow-xl">
+          <button className="flex items-center gap-3 bg-[var(--accent-primary)] text-white hover:bg-[var(--accent-hover)] px-6 py-3.5 rounded-xl transition-all font-bold text-xs shadow-xl">
             <Download className="w-4 h-4" />
             Compliance Export
           </button>
@@ -38,7 +38,7 @@ const CarbonReport = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { label: 'Cumulative Emissions', value: stats.totalEmissions, unit: 'kg CO2', icon: Globe2, color: 'text-zinc-100' },
+            { label: 'Cumulative Emissions', value: stats.totalEmissions, unit: 'kg CO2', icon: Globe2, color: 'text-[var(--text-primary)]' },
             { label: 'Mitigation Savings', value: stats.savings, unit: 'kg CO2', icon: Zap, color: 'text-blue-500' },
             { label: 'Fleet Intensity', value: stats.intensity, unit: 'g/km/t', icon: Activity, color: 'text-[var(--text-muted)]' },
             { label: 'Offset Indexing', value: stats.offset, unit: '%', icon: ShieldCheck, color: 'text-[var(--success)]' },
@@ -52,7 +52,7 @@ const CarbonReport = () => {
                <div>
                   <p className="text-[9px] text-[var(--text-secondary)] font-bold uppercase tracking-widest leading-none mb-3">{stat.label}</p>
                   <h4 className="text-3xl font-black text-[var(--text-primary)] tracking-tighter">
-                     {stat.value} <span className="text-[10px] font-bold text-zinc-700 ml-1 italic">{stat.unit}</span>
+                     {stat.value} <span className="text-[10px] font-bold text-[var(--text-muted)] ml-1 italic">{stat.unit}</span>
                   </h4>
                </div>
             </div>
@@ -68,7 +68,7 @@ const CarbonReport = () => {
                  {shipments.slice(0, 8).map((s, idx) => (
                    <div key={s.id} className="flex items-center justify-between p-5 rounded-xl bg-[var(--bg-tertiary)]/40 border border-[var(--border-primary)] hover:border-[var(--border-primary)] transition-colors">
                       <div className="flex items-center gap-6">
-                         <span className="text-[9px] font-black text-zinc-800 tabular-nums">0{idx + 1}</span>
+                         <span className="text-[9px] font-black text-[var(--text-muted)] tabular-nums">0{idx + 1}</span>
                          <div>
                             <p className="text-xs font-black text-[var(--text-primary)]">{s.id}</p>
                             <p className="text-[9px] font-bold text-[var(--text-secondary)] uppercase tracking-widest mt-0.5">{s.carrier}</p>
@@ -76,7 +76,7 @@ const CarbonReport = () => {
                       </div>
                       <div className="text-right">
                          <p className="text-xs font-black text-[var(--success)] tabular-nums">142.4 kg CO2</p>
-                         <p className="text-[8px] text-zinc-700 font-bold uppercase tracking-widest mt-1">Efficiency Match 94%</p>
+                         <p className="text-[8px] text-[var(--text-muted)] font-bold uppercase tracking-widest mt-1">Efficiency Match 94%</p>
                       </div>
                    </div>
                  ))}
@@ -112,3 +112,5 @@ const CarbonReport = () => {
 };
 
 export default CarbonReport;
+
+

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ref, onValue, update } from 'firebase/database';
+﻿import React, { useState, useEffect } from 'react';
+import { ref, onValue, update, push } from 'firebase/database';
 import { db } from '../firebase';
 import Layout from '../components/Layout';
 import { AlertCircle, Clock, MapPin, Newspaper, Shield, Activity } from 'lucide-react';
@@ -53,9 +53,20 @@ const Disruptions = () => {
               <button
                  onClick={async () => {
                     try {
-                       const res = await fetch('http://localhost:5000/api/test-disruption');
-                       if (res.ok) alert('Test disruption created successfully');
-                       else alert('Failed to create test disruption');
+                       const disruptionsRef = ref(db, 'disruptions');
+                        await push(disruptionsRef, {
+                           timestamp: new Date().toISOString(),
+                           shipmentId: 'TEST-001',
+                           newsHeadline: 'Test Disruption: Port Strike in Mumbai',
+                           weatherCondition: 'Severe weather conditions',
+                           geminiAnalysis: 'AI analysis indicates high risk due to port strike and severe weather conditions affecting the Mumbai corridor.',
+                           delayProbability: 'HIGH',
+                           estimatedDelayRange: '12-24 hours',
+                           affectedCheckpoint: 'Mumbai Port',
+                           mitigationStrategy: 'Consider rerouting via Chennai or Nhava Sheva. Coordinate with ground teams for alternate cargo handling.',
+                           actionTaken: 'Awaiting Manager Approval'
+                        });
+                        alert('Test disruption created successfully');
                     } catch (e) {
                        alert('Error creating test disruption: ' + e.message);
                     }
@@ -70,8 +81,8 @@ const Disruptions = () => {
         <div className="relative border-l border-[var(--border-primary)] ml-8 space-y-16 pb-12">
           {disruptions.length === 0 && !loading && (
             <div className="ml-16 p-20 glass rounded-3xl border-dashed border-[var(--border-primary)] text-center">
-               <Activity className="w-12 h-12 mx-auto mb-6 text-zinc-800" />
-               <p className="text-sm font-black text-zinc-700 uppercase tracking-widest italic">Monitoring global signal silence...</p>
+               <Activity className="w-12 h-12 mx-auto mb-6 text-[var(--text-muted)]" />
+               <p className="text-sm font-black text-[var(--text-muted)] uppercase tracking-widest italic">Monitoring global signal silence...</p>
             </div>
           )}
           
@@ -115,7 +126,7 @@ const Disruptions = () => {
                        </div>
                     </div>
                     <div className="flex items-center gap-3 px-4 py-2 bg-[var(--bg-primary)] rounded-lg border border-[var(--border-primary)]">
-                       <p className="text-[10px] font-black text-zinc-700 uppercase">ASSET ID</p>
+                       <p className="text-[10px] font-black text-[var(--text-muted)] uppercase">ASSET ID</p>
                        <p className="text-sm font-black text-blue-500 tracking-tight">#{event.shipmentId}</p>
                     </div>
                   </div>
@@ -156,7 +167,7 @@ const Disruptions = () => {
                           </div>
                           <div>
                              <p className="text-[10px] text-[var(--text-secondary)] font-black uppercase tracking-widest mb-1">Impacted Sector</p>
-                             <p className="text-sm font-bold text-zinc-100">{event.weatherCondition}</p>
+                             <p className="text-sm font-bold text-[var(--text-primary)]">{event.weatherCondition}</p>
                           </div>
                        </div>
                         <div className="p-6 bg-blue-500/5 rounded-2xl border border-blue-500/20 flex items-center justify-between gap-6 shadow-sm group hover:bg-blue-500/10 transition-colors">
@@ -201,7 +212,7 @@ const Disruptions = () => {
                                         alert("Connection Error: Strategic Node might be offline.");
                                      }
                                   }}
-                                  className="bg-white text-black text-[9px] font-black uppercase px-6 py-2 rounded-lg hover:bg-blue-500 hover:text-[var(--text-primary)] transition-all shadow-xl shadow-blue-500/10"
+                                  className="bg-[var(--accent-primary)] text-white text-[9px] font-black uppercase px-6 py-2 rounded-lg hover:bg-[var(--accent-hover)] transition-all shadow-xl shadow-blue-500/10"
                                >
                                   Authorize
                                </button>
@@ -220,3 +231,7 @@ const Disruptions = () => {
 };
 
 export default Disruptions;
+
+
+
+

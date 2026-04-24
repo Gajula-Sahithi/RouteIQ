@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ref, set } from 'firebase/database';
 import { db } from '../firebase';
 import { useAuth } from '../context/AuthContext';
@@ -175,7 +175,7 @@ const DriverCreateShipment = () => {
                         <button 
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-zinc-700 text-[var(--text-primary)] font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2"
+                            className="w-full bg-[var(--accent-primary)] hover:bg-[var(--accent-hover)] disabled:opacity-50 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2"
                         >
                             {loading ? (
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -194,3 +194,5 @@ const DriverCreateShipment = () => {
 };
 
 export default DriverCreateShipment;
+
+

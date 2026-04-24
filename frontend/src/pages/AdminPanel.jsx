@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { ref, onValue, update } from 'firebase/database';
 import { db } from '../firebase';
 import Layout from '../components/Layout';
@@ -74,7 +74,7 @@ const AdminPanel = () => {
                                     <th className="px-6 py-4 text-right">Access Management</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-zinc-900">
+                            <tbody className="divide-y divide-[var(--border-primary)]">
                                 {loading ? (
                                     <tr><td colSpan={4} className="px-6 py-10 text-center text-[var(--text-secondary)] font-bold uppercase tracking-widest animate-pulse">Synchronizing Registry...</td></tr>
                                 ) : (
@@ -83,7 +83,7 @@ const AdminPanel = () => {
                                             <td className="px-6 py-6">
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-10 h-10 rounded-full bg-[var(--bg-tertiary)] border border-[var(--border-primary)] overflow-hidden">
-                                                        {u.photoURL ? <img src={u.photoURL} alt="" /> : <div className="w-full h-full flex items-center justify-center text-zinc-700 bg-zinc-800"><Shield className="w-5 h-5" /></div>}
+                                                        {u.photoURL ? <img src={u.photoURL} alt="" /> : <div className="w-full h-full flex items-center justify-center text-[var(--text-muted)] bg-[var(--bg-tertiary)]"><Shield className="w-5 h-5" /></div>}
                                                     </div>
                                                     <div>
                                                         <p className="text-sm font-black text-[var(--text-primary)]">{u.displayName || 'Unknown Operator'}</p>
@@ -92,7 +92,7 @@ const AdminPanel = () => {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-6">
-                                                <div className="flex items-center gap-2 text-zinc-300">
+                                                <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                                                     <Mail className="w-3.5 h-3.5 text-[var(--text-secondary)]" />
                                                     <span className="text-xs font-medium">{u.email}</span>
                                                 </div>
@@ -101,7 +101,7 @@ const AdminPanel = () => {
                                                 <span className={`px-2.5 py-1 rounded-sm text-[9px] font-black uppercase tracking-[0.15em] border ${
                                                     u.role === 'Admin' ? 'text-red-500 bg-red-500/10 border-red-500/20' :
                                                     u.role === 'Manager' ? 'text-[var(--accent-primary)] bg-blue-500/10 border-blue-500/20' :
-                                                    'text-[var(--text-tertiary)] bg-zinc-800 border-zinc-700'
+                                                    'text-[var(--text-tertiary)] bg-[var(--bg-tertiary)] border-[var(--border-primary)]'
                                                 }`}>
                                                     {u.role}
                                                 </span>
@@ -109,7 +109,7 @@ const AdminPanel = () => {
                                             <td className="px-6 py-6 text-right">
                                                 {/* Ensure hardcoded admins can't be demoted via UI for safety */}
                                                 {(u.email === 'gantannagarisrinath123@gmail.com' || u.email === 'gajulasahithi2006@gmail.com') ? (
-                                                    <span className="text-[10px] font-black text-zinc-700 uppercase tracking-widest flex items-center justify-end gap-2">
+                                                    <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center justify-end gap-2">
                                                         <ShieldAlert className="w-4 h-4" /> Root Authorization
                                                     </span>
                                                 ) : (
@@ -120,7 +120,7 @@ const AdminPanel = () => {
                                                                 onClick={() => updateRole(u.uid, r)}
                                                                 disabled={u.role === r}
                                                                 className={`px-3 py-1.5 rounded-md text-[9px] font-black uppercase tracking-tighter transition-all ${
-                                                                    u.role === r ? 'bg-zinc-800 text-[var(--text-secondary)]' : 'bg-zinc-100 text-black hover:bg-white active:scale-95'
+                                                                    u.role === r ? 'bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-default' : 'bg-[var(--accent-primary)] text-white hover:bg-[var(--accent-hover)] active:scale-95'
                                                                 }`}
                                                             >
                                                                 {r}
@@ -142,3 +142,4 @@ const AdminPanel = () => {
 };
 
 export default AdminPanel;
+

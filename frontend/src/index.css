@@ -58,6 +58,25 @@
     --clay-border: 1px solid rgba(43,94,255,0.10);
 
     color-scheme: light;
+
+    /* --- Legacy variable aliases (light) --- */
+    --bg-primary: #F0F4FF;
+    --bg-secondary: #E8EEFF;
+    --bg-tertiary: #DDEAFF;
+    --bg-hover: rgba(43,94,255,0.06);
+    --text-primary: #1A1F3A;
+    --text-secondary: #3D4A6B;
+    --text-tertiary: #6B7A99;
+    --text-muted: #9AA3C4;
+    --border-primary: rgba(43,94,255,0.12);
+    --border-hover: rgba(43,94,255,0.25);
+    --accent-primary: #2B5EFF;
+    --accent-hover: #1A4BDD;
+    --success: #00C9A7;
+    --warning: #FF9F2E;
+    --error: #FF3355;
+    --info: #2B5EFF;
+    --card-premium-bg: #FFFFFF;
   }
 
   .dark {
@@ -82,6 +101,25 @@
     --clay-border: 1px solid rgba(255,255,255,.07);
 
     color-scheme: dark;
+
+    /* --- Legacy variable aliases (dark) --- */
+    --bg-primary: #0B0E1A;
+    --bg-secondary: #141930;
+    --bg-tertiary: #1A1F35;
+    --bg-hover: rgba(255,255,255,0.05);
+    --text-primary: #E2E8F4;
+    --text-secondary: #B0BCDA;
+    --text-tertiary: #6B7A99;
+    --text-muted: #4A5568;
+    --border-primary: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.18);
+    --accent-primary: #638BFF;
+    --accent-hover: #4F74E8;
+    --success: #1ED2A0;
+    --warning: #FFB450;
+    --error: #FF4060;
+    --info: #638BFF;
+    --card-premium-bg: #12172B;
   }
 
   body {
@@ -159,6 +197,42 @@
     @apply bg-surface/30;
   }
 
+  /* Card Premium - used by pages with old variable system */
+  .card-premium {
+    background-color: var(--card-premium-bg);
+    border-radius: var(--clay-radius);
+    border: var(--clay-border);
+    box-shadow: var(--clay-shadow), var(--clay-inset);
+    transition: all 0.3s ease;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-primary);
+  }
+
+  .dark .glass {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  :root .glass {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
   /* Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
@@ -168,6 +242,42 @@
   }
   ::-webkit-scrollbar-thumb {
     @apply bg-border rounded-full hover:bg-text-muted transition-colors;
+  }
+
+  /* Global form element theming */
+  input, textarea, select {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-primary);
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+  }
+
+  /* Select dropdown arrow color fix for light mode */
+  select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236B7A99' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25em;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* Fix bg-transparent inputs to still show text */
+  input.bg-transparent, textarea.bg-transparent {
+    background-color: transparent;
+    color: var(--text-primary);
+  }
+
+  /* SVG circle stroke fix for Carbon gauge ring */
+  .dark svg circle[stroke="#18181b"] {
+    stroke: #27272a;
+  }
+  :root svg circle[stroke="#18181b"] {
+    stroke: var(--border-primary);
   }
 }
 

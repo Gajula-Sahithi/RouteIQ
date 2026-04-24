@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { ref, onValue, update, remove } from 'firebase/database';
 import { db } from '../firebase';
 import Layout from '../components/Layout';
@@ -87,7 +87,7 @@ const AdminShipmentApproval = () => {
             case 'PENDING_APPROVAL': return 'text-amber-400 bg-[var(--warning)]/10 border-amber-500/30';
             case 'REJECTED': return 'text-rose-400 bg-[var(--error)]/10 border-rose-500/30';
             case 'AT_RISK': return 'text-red-400 bg-red-500/10 border-red-500/30';
-            default: return 'text-[var(--text-muted)] bg-zinc-500/10 border-zinc-500/30';
+            default: return 'text-[var(--text-muted)] bg-[var(--bg-tertiary)] border-[var(--border-primary)]';
         }
     };
 
@@ -167,7 +167,7 @@ const AdminShipmentApproval = () => {
                         </div>
                     ) : filteredShipments.length === 0 ? (
                         <div className="p-12 text-center">
-                            <div className="w-16 h-16 rounded-full bg-[var(--bg-tertiary)] border border-[var(--border-primary)] flex items-center justify-center mx-auto text-zinc-700 mb-4">
+                            <div className="w-16 h-16 rounded-full bg-[var(--bg-tertiary)] border border-[var(--border-primary)] flex items-center justify-center mx-auto text-[var(--text-muted)] mb-4">
                                 <Package className="w-8 h-8" />
                             </div>
                             <h3 className="text-[var(--text-primary)] font-black uppercase tracking-widest text-xs mb-2">No Shipments Found</h3>
@@ -188,7 +188,7 @@ const AdminShipmentApproval = () => {
                                         <th className="px-6 py-4 text-right">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-zinc-900">
+                                <tbody className="divide-y divide-[var(--border-primary)]">
                                     {filteredShipments.map((s) => (
                                         <tr key={s.id} className="hover:bg-[var(--bg-tertiary)]/40 transition-colors">
                                             <td className="px-6 py-4">
@@ -206,7 +206,7 @@ const AdminShipmentApproval = () => {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <div className="flex items-center gap-2 text-zinc-300 text-xs">
+                                                <div className="flex items-center gap-2 text-[var(--text-secondary)] text-xs">
                                                     <MapPin className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
                                                     {s.origin}
                                                     <ArrowRight className="w-3 h-3 text-[var(--text-secondary)]" />
@@ -234,7 +234,7 @@ const AdminShipmentApproval = () => {
                                                 ) : (
                                                     <button
                                                         onClick={() => setSelectedShipment(s)}
-                                                        className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-[var(--text-muted)] rounded-md text-[10px] font-black uppercase tracking-tighter transition-all"
+                                                        className="px-3 py-1.5 bg-[var(--bg-tertiary)] hover:bg-[var(--bg-hover)] text-[var(--text-muted)] rounded-md text-[10px] font-black uppercase tracking-tighter transition-all"
                                                     >
                                                         View
                                                     </button>
@@ -257,7 +257,7 @@ const AdminShipmentApproval = () => {
                             <h2 className="text-xl font-black text-[var(--text-primary)]">Shipment Details</h2>
                             <button 
                                 onClick={() => setSelectedShipment(null)}
-                                className="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-[var(--text-muted)]"
+                                className="w-8 h-8 rounded-lg bg-[var(--bg-tertiary)] hover:bg-[var(--bg-hover)] flex items-center justify-center text-[var(--text-muted)]"
                             >
                                 <X className="w-4 h-4" />
                             </button>
@@ -289,7 +289,7 @@ const AdminShipmentApproval = () => {
                                 </div>
 
                                 <div className="flex items-center gap-4 p-4 bg-[var(--bg-tertiary)]/50 border border-[var(--border-primary)] rounded-xl">
-                                    <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center">
                                         <MapPin className="w-5 h-5 text-[var(--text-muted)]" />
                                     </div>
                                     <div className="flex-1">
@@ -304,7 +304,7 @@ const AdminShipmentApproval = () => {
 
                                 {selectedShipment.cargo && (
                                     <div className="flex items-center gap-4 p-4 bg-[var(--bg-tertiary)]/50 border border-[var(--border-primary)] rounded-xl">
-                                        <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center">
                                             <Package className="w-5 h-5 text-[var(--text-muted)]" />
                                         </div>
                                         <div>
@@ -320,7 +320,7 @@ const AdminShipmentApproval = () => {
                                 {selectedShipment.notes && (
                                     <div className="p-4 bg-[var(--warning)]/5 border border-amber-500/20 rounded-xl">
                                         <span className="text-[10px] font-black text-[var(--warning)] uppercase tracking-widest">Driver Notes</span>
-                                        <p className="text-zinc-300 text-sm mt-1">{selectedShipment.notes}</p>
+                                        <p className="text-[var(--text-secondary)] text-sm mt-1">{selectedShipment.notes}</p>
                                     </div>
                                 )}
                             </div>
@@ -348,7 +348,7 @@ const AdminShipmentApproval = () => {
                             {selectedShipment.status !== 'PENDING_APPROVAL' && !selectedShipment.requiresApproval && (
                                 <button
                                     onClick={() => handleDelete(selectedShipment.id)}
-                                    className="w-full bg-zinc-800 hover:bg-rose-600 text-[var(--text-muted)] hover:text-[var(--text-primary)] font-bold py-3 rounded-xl transition-all"
+                                    className="w-full bg-[var(--bg-tertiary)] hover:bg-rose-600 text-[var(--text-muted)] hover:text-[var(--text-primary)] font-bold py-3 rounded-xl transition-all"
                                 >
                                     Delete Shipment
                                 </button>
@@ -362,3 +362,5 @@ const AdminShipmentApproval = () => {
 };
 
 export default AdminShipmentApproval;
+
+
