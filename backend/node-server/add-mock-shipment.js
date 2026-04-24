@@ -3,9 +3,9 @@ const admin = require('firebase-admin');
 
 // Initialize Firebase Admin (use environment variables)
 const serviceAccount = {
-  projectId: "routeiqlogistics-69d7b",
+  projectId: "sentinellogistics-69d7b",
   privateKey: process.env.FIREBASE_PRIVATE_KEY ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n') : undefined,
-  clientEmail: process.env.FIREBASE_CLIENT_EMAIL || "firebase-adminsdk-xxxxx@routeiqlogistics-69d7b.iam.gserviceaccount.com"
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL || "firebase-adminsdk-xxxxx@sentinellogistics-69d7b.iam.gserviceaccount.com"
 };
 
 if (!serviceAccount.privateKey) {
@@ -16,7 +16,7 @@ if (!serviceAccount.privateKey) {
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://routeiqlogistics-69d7b-default-rtdb.firebaseio.com"
+  databaseURL: "https://sentinellogistics-69d7b-default-rtdb.firebaseio.com"
 });
 
 const db = getDatabase();
@@ -57,4 +57,5 @@ async function addShipment() {
 }
 
 addShipment();
+
 

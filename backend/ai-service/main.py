@@ -35,7 +35,7 @@ async def analyze_risk(request: RiskAnalysisRequest):
         temp = request.weather.get('main', {}).get('temp', 0) - 273.15 # Celsius
         
         system_prompt = f"""
-        You are a senior logistics risk analyst for RouteIQLogistics AI. 
+        You are a senior logistics risk analyst for RouteIQ AI. 
         Analyze the risk for shipment {request.shipment.get('id')} from {request.shipment.get('origin')} to {request.shipment.get('destination')}.
         
         WAYPOINTS/ROUTE: 
@@ -102,4 +102,5 @@ def read_root():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
 

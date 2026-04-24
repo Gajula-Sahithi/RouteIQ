@@ -53,7 +53,7 @@ const performAIAnalysis = async (shipment, newsFeed, weather) => {
     const temp = (weather.main?.temp || 0) - 273.15;
 
     const systemPrompt = `
-      You are a senior logistics risk analyst for RouteIQLogistics AI. 
+      You are a senior logistics risk analyst for RouteIQ AI. 
       Analyze the risk for shipment ${shipment.id} from ${shipment.origin} to ${shipment.destination}.
       
       ROUTE GEOMETRY (Waypoints):
@@ -561,4 +561,5 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`SENTINEL UNIFIED SERVER RUNNING`);
   console.log(`URL: http://localhost:${PORT}`);
 });
+
 
