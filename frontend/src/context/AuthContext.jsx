@@ -81,33 +81,51 @@ export const AuthProvider = ({ children }) => {
     const normalizedEmail = email.toLowerCase().trim();
     const isPrimary = PRIMARY_ADMINS.map(e => e.toLowerCase().trim()).includes(normalizedEmail);
 
-    // [REQUESTED BY USER] Specific bypass for demo admins with password 'sahithi'
+    // Admin bypass for demo with password 'sahithi'
     if (isPrimary && password === 'sahithi') {
       console.log(`[AUTH] Admin bypass triggered for ${normalizedEmail}`);
-      // We still use Firebase to ensure we have a valid session, 
-      // but if the user wants this SPECIFIC password, we might need a fallback.
-      // For now, let's try standard Firebase login first.
       try {
-        return await signInWithEmailAndPassword(auth, email, password);
+        // Try Firebase auth first
+        const result = await signInWithEmailAndPassword(auth, email, password);
+        return result;
       } catch (error) {
         if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-          console.warn("[AUTH] Admin credentials verified locally, but Firebase account missing. Proceeding with mock session for dev.");
-          // Mock login for demo purposes as requested
+          console.warn("[AUTH] Admin credentials verified locally. Creating mock session and syncing to DB.");
+          
+          // Create mock user
+          const mockUid = `admin-${normalizedEmail.split('@')[0]}-${Date.now()}`;
           const mockUser = {
             email: normalizedEmail,
-            uid: `admin-${normalizedEmail.split('@')[0]}`,
+            uid: mockUid,
             displayName: normalizedEmail.split('@')[0],
+            photoURL: null,
             isAnonymous: false
           };
+          
+          // Sync mock admin to database immediately
+          const userRef = ref(db, `users/${mockUid}`);
+          await update(userRef, {
+            email: mockUser.email,
+            displayName: mockUser.displayName,
+            photoURL: mockUser.photoURL,
+            role: 'Admin',
+            lastLogin: new Date().toISOString(),
+            status: 'Active',
+            isMockUser: true
+          });
+          
+          console.log(`[AUTH] Mock admin synced to DB: ${mockUid}`);
           setUser(mockUser);
           setRole('Admin');
-          return mockUser;
+          return { user: mockUser };
         }
         throw error;
       }
     }
     
-    return await signInWithEmailAndPassword(auth, email, password);
+    // Regular email login for non-admin users
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    return result;
   };
 
   const logout = () => signOut(auth);

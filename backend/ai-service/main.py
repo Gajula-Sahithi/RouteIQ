@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import google.generativeai as genai
+from groq import Groq
 import os
 import json
 from typing import List, Optional
@@ -10,9 +10,9 @@ load_dotenv()
 
 app = FastAPI()
 
-# Configure Gemini
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel('gemini-1.5-flash') # Using 1.5 flash as 2.5 isn't GA yet
+# Configure Groq AI
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
 class Shipment(BaseModel):
     id: str
@@ -38,6 +38,9 @@ async def analyze_risk(request: RiskAnalysisRequest):
         You are a senior logistics risk analyst for SentinelLogistics AI. 
         Analyze the risk for shipment {request.shipment.get('id')} from {request.shipment.get('origin')} to {request.shipment.get('destination')}.
         
+        WAYPOINTS/ROUTE: 
+        {request.shipment.get('waypoints', 'Direct route')}
+        
         RELEVANT LOGISTICS NEWS:
         {news_summaries}
         
@@ -46,28 +49,39 @@ async def analyze_risk(request: RiskAnalysisRequest):
         - Temp: {temp:.1f}°C
         
         TASK:
-        Identify if this shipment is at risk based on the news (strikes, port closures, global logistics events) and weather.
+        1. Identify if this shipment is at risk based on the news and weather.
+        2. Correlate events with specific checkpoints or route segments.
+        3. Predict delay probability and estimated time impact.
+        4. Recommend a proactive mitigation strategy.
         
         Return ONLY a JSON object with:
         {{
             "shipmentId": "{request.shipment.get('id')}",
             "riskScore": (integer 0-100),
-            "riskReason": (string explanation in one sentence),
+            "riskReason": (string explanation),
             "confidence": ("LOW" | "MEDIUM" | "HIGH"),
-            "recommendedAction": (string concise recommendation)
+            "delayProbability": ("LOW" | "MEDIUM" | "HIGH"),
+            "estimatedDelayRange": (string e.g. "6-12 hours"),
+            "affectedCheckpoint": (string e.g. "Suez Canal" or "Munich Hub"),
+            "recommendedAction": (string concise recommendation),
+            "mitigationStrategy": (detailed proactive advice)
         }}
         """
 
-        response = model.generate_content(system_prompt)
+        response = client.chat.completions.create(
+            messages=[{"role": "user", "content": system_prompt}],
+            model=GROQ_MODEL,
+            response_format={"type": "json_object"}
+        )
         
-        # Clean response if it contains markdown markers
-        cleaned_response = response.text.replace('```json', '').replace('```', '').strip()
-        analysis = json.loads(cleaned_response)
+        # Extract response text
+        content = response.choices[0].message.content
+        analysis = json.loads(content)
         
         return analysis
 
     except Exception as e:
-        print(f"Error in Gemini Analysis: {str(e)}")
+        print(f"Error in Groq Analysis: {str(e)}")
         # Fallback response
         return {
             "shipmentId": request.shipment.get('id', 'UNKNOWN'),
@@ -81,7 +95,7 @@ async def analyze_risk(request: RiskAnalysisRequest):
 def read_root():
     return {
         "service": "Sentinel AI Disruption Engine",
-        "model": "Gemini 1.5 Flash",
+        "model": f"Groq ({GROQ_MODEL})",
         "status": "Ready"
     }
 

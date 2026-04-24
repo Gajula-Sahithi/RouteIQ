@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../firebase';
 import Layout from '../components/Layout';
+import { useTheme } from '../context/ThemeContext';
 import { Shield, MapPin, Navigation, Info, Maximize2 } from 'lucide-react';
 
 // Fix for leaflet marker icons in React
@@ -17,6 +18,7 @@ L.Icon.Default.mergeOptions({
 
 const Heatmap = () => {
   const [shipments, setShipments] = useState([]);
+  const { isDark } = useTheme();
 
   useEffect(() => {
     const shipmentsRef = ref(db, 'shipments');
@@ -28,46 +30,49 @@ const Heatmap = () => {
   }, []);
 
   const getMarkerIcon = (status) => {
-    const color = status === 'AT_RISK' ? '#f59e0b' : (status === 'DELAYED' ? '#ef4444' : '#3b82f6');
+    // Standardizing on design system palette
+    const color = status === 'AT_RISK' ? '#FF9F2E' : (status === 'DELAYED' ? '#FF3355' : '#2B5EFF');
     return L.divIcon({
       className: 'custom-div-icon',
-      html: `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%; border: 3px solid #000; box-shadow: 0 0 15px ${color}"></div>`,
-      iconSize: [24, 24],
-      iconAnchor: [12, 12]
+      html: `<div style="background-color: ${color}; width: 14px; height: 14px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 0 20px ${color}"></div>`,
+      iconSize: [28, 28],
+      iconAnchor: [14, 14]
     });
   };
 
   return (
     <Layout>
-      <div className="h-full flex flex-col space-y-8 pb-10">
-        <header className="flex justify-between items-center">
+      <div className="h-full flex flex-col space-y-10 pb-10">
+        <header className="flex justify-between items-center animate-in fade-in slide-in-from-left-4 duration-700">
           <div>
-            <h1 className="text-3xl font-black text-white tracking-tighter">Spatial Analysis</h1>
-            <p className="text-zinc-500 text-sm font-medium uppercase tracking-widest mt-1">Real-time GPS Telemetry Grid</p>
+            <h1 className="text-4xl font-l1-hero text-text-primary tracking-wide uppercase">Spatial Analysis</h1>
+            <p className="font-l5-micro text-accent tracking-[0.4em] mt-1">Real-time GPS Telemetry Grid</p>
           </div>
           
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3 bg-zinc-900 px-5 py-2.5 rounded-xl border border-zinc-800">
+            <div className="clay-surface !px-6 !py-3 flex items-center gap-3">
                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-                  <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">System Online</span>
+                  <div className="w-2.5 h-2.5 rounded-full bg-teal shadow-[0_0_12px_var(--color-teal)]"></div>
+                  <span className="font-l5-micro text-text-muted">Protocol Active</span>
                </div>
             </div>
           </div>
         </header>
 
-        <div className="flex-1 grid grid-cols-1 xl:grid-cols-4 gap-8 min-h-[650px]">
+        <div className="flex-1 grid grid-cols-1 xl:grid-cols-4 gap-10 min-h-[700px]">
           {/* Map Container - 3/4 width */}
-          <div className="xl:col-span-3 card-premium p-1 relative overflow-hidden group border-zinc-800/60 ring-1 ring-zinc-800/20">
+          <div className="xl:col-span-3 clay-card !p-1 relative overflow-hidden ring-1 ring-border/10">
             <MapContainer 
               center={[20, 0]} 
               zoom={2.5} 
-              className="w-full h-full rounded-lg z-0"
-              style={{ background: '#000' }}
+              className="w-full h-full rounded-[var(--clay-radius)] z-0"
+              style={{ background: isDark ? '#0B0E20' : '#F0F4FF' }}
             >
               <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                url={isDark 
+                  ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                  : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"}
+                attribution='&copy; CARTO'
               />
               {shipments.map((shipment) => (
                 <React.Fragment key={shipment.id}>
@@ -76,24 +81,24 @@ const Heatmap = () => {
                     icon={getMarkerIcon(shipment.status)}
                   >
                     <Popup className="premium-popup">
-                      <div className="p-4 min-w-[220px] bg-black text-white rounded-xl shadow-2xl border border-zinc-800">
-                        <div className="flex justify-between items-start mb-4 border-b border-zinc-800 pb-3">
+                      <div className="p-4 min-w-[240px] bg-card text-text-primary rounded-2xl shadow-clay border border-border">
+                        <div className="flex justify-between items-start mb-4 border-b border-border-muted pb-4">
                            <div>
-                              <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest leading-none mb-1">Asset ID</p>
-                              <p className="text-sm font-black text-white tracking-tight">{shipment.id}</p>
+                              <p className="font-l5-micro text-text-muted mb-1">Asset Trace</p>
+                              <p className="text-sm font-l2-card tracking-tight">{shipment.id}</p>
                            </div>
-                           <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest ${shipment.status === 'ON_TRACK' ? 'bg-blue-500/10 text-blue-500' : 'bg-red-500/10 text-red-500'}`}>
-                              {shipment.status}
+                           <span className={`px-2.5 py-1 rounded-lg font-l5-micro !tracking-normal ${shipment.status === 'ON_TRACK' ? 'bg-accent/10 text-accent' : 'bg-danger/10 text-danger'}`}>
+                              {shipment.status?.replace('_', ' ')}
                            </span>
                         </div>
-                        <div className="space-y-3">
-                           <div className="flex items-center gap-3">
-                              <MapPin className="w-3.5 h-3.5 text-zinc-600" />
-                              <p className="text-[10px] font-bold text-zinc-300">{shipment.origin} &rarr; {shipment.destination}</p>
+                        <div className="space-y-4 font-l4-body">
+                           <div className="flex items-center gap-4">
+                              <MapPin className="w-4 h-4 text-accent" />
+                              <p className="text-[11px] font-bold uppercase tracking-tight opacity-80">{shipment.origin} &rarr; {shipment.destination}</p>
                            </div>
-                           <div className="flex items-center gap-3">
-                              <Navigation className="w-3.5 h-3.5 text-zinc-600" />
-                              <p className="text-[10px] font-bold text-zinc-300">Lat: {shipment.currentLat.toFixed(4)}, Lng: {shipment.currentLng.toFixed(4)}</p>
+                           <div className="flex items-center gap-4">
+                              <Navigation className="w-4 h-4 text-text-muted" />
+                              <p className="font-l3-data text-xs text-accent">{shipment.currentLat.toFixed(4)}, {shipment.currentLng.toFixed(4)}</p>
                            </div>
                         </div>
                       </div>
@@ -102,8 +107,13 @@ const Heatmap = () => {
                   {shipment.status !== 'ON_TRACK' && (
                     <Circle 
                       center={[shipment.currentLat, shipment.currentLng]} 
-                      radius={500000} 
-                      pathOptions={{ color: shipment.status === 'AT_RISK' ? '#f59e0b' : '#ef4444', fillOpacity: 0.05, weight: 1 }}
+                      radius={400000} 
+                      pathOptions={{ 
+                        color: shipment.status === 'AT_RISK' ? 'var(--color-warn)' : 'var(--color-danger)', 
+                        fillOpacity: 0.08, 
+                        weight: 1,
+                        dashArray: '8, 8'
+                      }}
                     />
                   )}
                 </React.Fragment>
@@ -111,27 +121,27 @@ const Heatmap = () => {
             </MapContainer>
             
             {/* Overlay Map Controls */}
-            <div className="absolute top-6 left-6 z-[1000] flex flex-col gap-2">
-               <button className="w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center justify-center text-zinc-500 hover:text-white hover:border-zinc-700 transition-all">
-                  <Maximize2 className="w-5 h-5" />
+            <div className="absolute top-8 left-8 z-[1000] flex flex-col gap-3">
+               <button className="clay-card !p-3 bg-surface/80 backdrop-blur-md border-none ring-1 ring-border/20 text-text-muted hover:text-accent transition-all">
+                  <Maximize2 className="w-6 h-6" />
                </button>
             </div>
 
-            <div className="absolute bottom-10 right-10 z-[1000]">
-               <div className="bg-zinc-900/90 backdrop-blur-xl border border-zinc-800 p-6 rounded-2xl shadow-2xl min-w-[200px]">
-                  <p className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">Legend Cluster</p>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
-                      <span className="text-[11px] font-bold text-zinc-300">On Track Protocol</span>
+            <div className="absolute bottom-12 right-12 z-[1000]">
+               <div className="clay-card !bg-surface/90 backdrop-blur-xl border-none ring-1 ring-border/20 p-8 min-w-[240px]">
+                  <p className="font-l5-micro text-text-muted mb-6 tracking-[0.3em]">Telemetry Legend</p>
+                  <div className="space-y-5">
+                    <div className="flex items-center gap-4">
+                      <div className="w-3 h-3 rounded-full bg-accent shadow-[0_0_12px_var(--color-accent)]"></div>
+                      <span className="text-[12px] font-l2-card text-text-primary tracking-tight">On Track Protocol</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]"></div>
-                      <span className="text-[11px] font-bold text-zinc-300">Intelligence Warning</span>
+                    <div className="flex items-center gap-4">
+                      <div className="w-3 h-3 rounded-full bg-warn shadow-[0_0_12px_var(--color-warn)]"></div>
+                      <span className="text-[12px] font-l2-card text-text-primary tracking-tight">Intelligence Warning</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]"></div>
-                      <span className="text-[11px] font-bold text-zinc-300">Critical Disruption</span>
+                    <div className="flex items-center gap-4">
+                      <div className="w-3 h-3 rounded-full bg-danger shadow-[0_0_12px_var(--color-danger)]"></div>
+                      <span className="text-[12px] font-l2-card text-text-primary tracking-tight">Critical Disruption</span>
                     </div>
                   </div>
                </div>
@@ -139,36 +149,47 @@ const Heatmap = () => {
           </div>
 
           {/* Side Info - 1/4 width */}
-          <div className="xl:col-span-1 space-y-6">
-            <div className="card-premium p-6">
-               <h3 className="text-xs font-black text-zinc-500 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                  <Info className="w-4 h-4 text-blue-500" />
-                  Telemetry Stats
-               </h3>
-               <div className="space-y-6">
-                  <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50">
-                     <p className="text-[9px] text-zinc-600 font-black uppercase tracking-widest mb-1">Global Coverage</p>
-                     <p className="text-2xl font-black text-white tracking-tighter">98.4<span className="text-sm font-medium text-zinc-700 ml-1">%</span></p>
+          <div className="xl:col-span-1 flex flex-col gap-10">
+            <div className="clay-card p-8">
+               <h3 className="font-l5-micro text-text-muted mb-8 flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-accent/10">
+                    <Info className="w-4 h-4 text-accent" />
                   </div>
-                  <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50">
-                     <p className="text-[9px] text-zinc-600 font-black uppercase tracking-widest mb-1">Satellite Fixed</p>
-                     <p className="text-2xl font-black text-white tracking-tighter">24 <span className="text-[10px] text-emerald-500 font-bold ml-1">LOCKED</span></p>
+                  System Metrics
+               </h3>
+               <div className="space-y-8">
+                  <div className="clay-surface !p-6 border-none ring-1 ring-border/20 bg-surface/30">
+                     <p className="font-l5-micro text-text-muted mb-2 tracking-widest leading-none">Global Coverage</p>
+                     <p className="text-4xl font-l1-hero text-text-primary tracking-wide">98.4<span className="text-base font-l4-body text-accent ml-1">%</span></p>
+                  </div>
+                  <div className="clay-surface !p-6 border-none ring-1 ring-border/20 bg-surface/30">
+                     <p className="font-l5-micro text-text-muted mb-2 tracking-widest leading-none">Satellite Fixed</p>
+                     <p className="text-4xl font-l1-hero text-text-primary tracking-wide">24 <span className="text-[12px] font-l3-data text-teal ml-2 px-2 py-0.5 clay-card !bg-teal/10 !border-none tracking-normal">LOCK</span></p>
                   </div>
                </div>
             </div>
 
-            <div className="card-premium p-6 flex-1">
-               <h3 className="text-xs font-black text-zinc-500 uppercase tracking-[0.2em] mb-6">Recent Anomaly Clusters</h3>
-               <div className="space-y-3">
-                  {shipments.filter(s => s.status !== 'ON_TRACK').slice(0, 4).map(s => (
-                    <div key={s.id} className="p-4 rounded-xl border border-zinc-800/50 bg-zinc-900/30 hover:border-zinc-700 transition-colors cursor-pointer group">
-                       <div className="flex justify-between items-start">
-                          <p className="text-xs font-black text-white tracking-tight">{s.id}</p>
-                          <span className="text-[8px] font-black uppercase tracking-widest text-zinc-600 group-hover:text-amber-500 transition-colors">Alert</span>
+            <div className="clay-card p-8 flex-1">
+               <h3 className="font-l5-micro text-text-muted mb-8 uppercase tracking-[0.2em]">Live Risk Polling</h3>
+               <div className="space-y-4">
+                  {shipments.filter(s => s.status !== 'ON_TRACK').slice(0, 5).map(s => (
+                    <div key={s.id} className="clay-surface !p-4 border-none ring-1 ring-border/10 hover:ring-accent/40 bg-surface/20 transition-all cursor-pointer group">
+                       <div className="flex justify-between items-center">
+                          <p className="text-sm font-l2-card text-text-primary tracking-tight">{s.id}</p>
+                          <span className="font-l5-micro text-warn !tracking-normal">POLL-ACTIVE</span>
                        </div>
-                       <p className="text-[10px] text-zinc-500 font-medium mt-1 truncate">{s.origin} Corrdior Risk</p>
+                       <div className="flex items-center gap-2 mt-2 opacity-60">
+                          <span className="font-l5-micro text-[9px]">{s.carrier}</span>
+                          <span className="w-1 h-1 rounded-full bg-border"></span>
+                          <span className="font-l5-micro text-[9px]">{s.destination}</span>
+                       </div>
                     </div>
                   ))}
+                  {shipments.filter(s => s.status !== 'ON_TRACK').length === 0 && (
+                    <div className="text-center py-10">
+                       <p className="font-l5-micro text-text-muted italic lowercase">no anomalies in pool</p>
+                    </div>
+                  )}
                </div>
             </div>
           </div>

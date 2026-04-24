@@ -24,7 +24,6 @@ const Login = () => {
     e.preventDefault();
     setError('');
     
-    // Client-side validation for primary admins
     const allowedEmails = ['gantannagarisrinath123@gmail.com', 'gajulasahithi2006@gmail.com'];
     if (!allowedEmails.includes(email.toLowerCase().trim())) {
       setError('Access Denied: High-level clearance required.');
@@ -40,111 +39,118 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 selection:bg-blue-500/30">
-      {/* Background decoration */}
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 selection:bg-accent/30 transition-colors duration-500">
+      {/* Dynamic Background Gradients */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full"></div>
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-accent/5 blur-[150px] rounded-full animate-pulse"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-violet/5 blur-[150px] rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      <div className="w-full max-w-[400px] relative z-10">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-zinc-900 border border-zinc-800 rounded-2xl mb-6 shadow-2xl">
-            <Shield className="w-7 h-7 text-blue-500" />
+      <div className="w-full max-w-[440px] relative z-10">
+        <div className="text-center mb-12 animate-in fade-in zoom-in duration-700">
+          <div className="inline-flex items-center justify-center w-20 h-20 clay-card !bg-surface/40 border-none ring-1 ring-border/20 mb-8 shadow-xl animate-float">
+            <Shield className="w-10 h-10 text-accent" />
           </div>
-          <h1 className="text-4xl font-black heading-hero mb-3">Sentinel<span className="text-blue-500">AI</span></h1>
-          <p className="text-zinc-500 text-sm font-medium">Enterprise Logistics Risk Intelligence</p>
+          <h1 className="text-6xl font-l1-hero text-text-primary tracking-wider mb-2 uppercase">Sentinel</h1>
+          <p className="font-l5-micro text-accent tracking-[0.4em]">Risk Intelligence Terminal</p>
         </div>
 
-        <div className="card-premium p-8 bg-zinc-900/50 backdrop-blur-xl border-zinc-800">
+        <div className="clay-card !p-10 !bg-surface/30 backdrop-blur-2xl border-none ring-1 ring-border/20 shadow-2xl">
           {!isAdminMode ? (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-xl font-bold text-white mb-2">Operator Portal</h2>
-                <p className="text-zinc-500 text-xs">Authorize to access the global operational theatre.</p>
+            <div className="space-y-8">
+              <div className="text-center md:text-left">
+                <h2 className="text-2xl font-l2-card text-text-primary mb-2">Operator Portal</h2>
+                <p className="font-l5-micro text-text-muted lowercase italic">Authorize to access global spatial theatre</p>
               </div>
 
               <button 
                 onClick={handleGoogleLogin}
-                className="w-full group relative flex items-center justify-center gap-3 bg-white text-black font-bold py-3.5 rounded-xl hover:bg-zinc-200 transition-all duration-300"
+                className="clay-btn-primary w-full py-4 !rounded-2xl group"
               >
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/smartlock/google.svg" className="w-5 h-5" alt="Google" />
+                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
                 Sign in with Google
                 <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
               </button>
 
-              <div className="flex items-center gap-4 py-2">
-                <div className="h-px bg-zinc-800 flex-1"></div>
-                <span className="text-[10px] font-black text-zinc-700 uppercase tracking-widest">Secure Access</span>
-                <div className="h-px bg-zinc-800 flex-1"></div>
+              <div className="flex items-center gap-4 py-4">
+                <div className="h-px bg-border/50 flex-1"></div>
+                <span className="font-l5-micro text-text-muted">Secure Access</span>
+                <div className="h-px bg-border/50 flex-1"></div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                  <button 
                   onClick={() => setIsAdminMode(true)}
-                  className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 flex flex-col items-center gap-2 group hover:border-blue-500/50 transition-colors"
+                  className="clay-surface !p-5 flex flex-col items-center gap-3 group hover:ring-accent/40 transition-all bg-surface/40 border-none ring-1 ring-border/20"
                  >
-                    <Lock className="w-4 h-4 text-zinc-600 group-hover:text-blue-500 transition-colors" />
-                    <span className="text-[9px] font-bold text-zinc-600 group-hover:text-blue-400 uppercase tracking-widest">Admin Command</span>
+                    <div className="p-3 rounded-xl bg-accent/10 border border-accent/20 group-hover:shadow-[0_0_15px_var(--color-accent)] transition-all">
+                       <Lock className="w-5 h-5 text-accent" />
+                    </div>
+                    <span className="font-l5-micro text-text-muted group-hover:text-accent">Admin Command</span>
                  </button>
-                 <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 flex flex-col items-center gap-2 group cursor-not-allowed opacity-50">
-                    <Globe className="w-4 h-4 text-zinc-600" />
-                    <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">External SSO</span>
+                 <div className="clay-surface !p-5 flex flex-col items-center gap-3 opacity-40 cursor-not-allowed border-none ring-1 ring-border/10">
+                    <div className="p-3 rounded-xl bg-text-muted/10 border border-text-muted/10">
+                       <Globe className="w-5 h-5 text-text-muted" />
+                    </div>
+                    <span className="font-l5-micro text-text-muted">External SSO</span>
                  </div>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleAdminLogin} className="space-y-5">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <Lock className="w-4 h-4 text-blue-500" />
-                    Admin Command
-                  </h2>
-                  <button 
-                    type="button"
-                    onClick={() => setIsAdminMode(false)}
-                    className="text-[10px] text-zinc-500 hover:text-white uppercase font-bold tracking-widest"
-                  >
-                    Back
-                  </button>
+            <form onSubmit={handleAdminLogin} className="space-y-6">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-xl font-l2-card text-text-primary flex items-center gap-3 uppercase tracking-tight">
+                   <Lock className="w-5 h-5 text-accent" />
+                   Authorization
+                </h2>
+                <button 
+                  type="button"
+                  onClick={() => setIsAdminMode(false)}
+                  className="font-l5-micro text-text-muted hover:text-accent transition-colors"
+                >
+                  &larr; Exit
+                </button>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label className="font-l5-micro text-text-muted ml-1">Email Node</label>
+                  <input 
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="admin@sentinel.ai"
+                    className="clay-surface w-full !bg-surface/50 border-none ring-1 ring-border/20 px-6 py-4 text-sm font-l4-body text-text-primary focus:ring-accent/50 transition-all outline-none"
+                  />
                 </div>
-                
-                <div className="space-y-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Email Node</label>
-                    <input 
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="admin@sentinel.ai"
-                      className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Secure Protocol</label>
-                    <input 
-                      type="password"
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <label className="font-l5-micro text-text-muted ml-1">Secure Protocol</label>
+                  <input 
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="clay-surface w-full !bg-surface/50 border-none ring-1 ring-border/20 px-6 py-4 text-sm font-l4-body text-text-primary focus:ring-accent/50 transition-all outline-none"
+                  />
                 </div>
               </div>
 
               {error && (
-                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-bold uppercase tracking-wider">
+                <div className="clay-card !bg-danger/10 border-danger/30 p-4 text-danger font-l5-micro !tracking-normal">
                   {error}
                 </div>
               )}
 
               <button 
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.2)] flex items-center justify-center gap-2 group"
+                className="clay-btn-primary w-full py-4 !rounded-2xl group"
               >
                 Execute Authorization
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -153,7 +159,7 @@ const Login = () => {
           )}
         </div>
 
-        <p className="text-center mt-12 text-[10px] font-black text-zinc-800 uppercase tracking-[0.3em]">
+        <p className="text-center mt-12 font-l5-micro text-text-muted !tracking-[0.4em] opacity-40">
           ISO-27001 Certified System &bull; © 2026 Sentinel Logistics
         </p>
       </div>

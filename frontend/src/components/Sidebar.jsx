@@ -1,14 +1,19 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
-  LayoutDashboard, Map, Activity, 
+  LayoutDashboard, Map, Activity, MapPin,
   BarChart3, Settings, Shield, LogOut,
-  FolderLock, Truck, UserCog, Database
+  FolderLock, Truck, UserCog, Database,
+  PlusCircle, CheckSquare, Sun, Moon, Eye, ChevronDown
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { useState } from 'react';
 
 const Sidebar = () => {
   const { logout, role } = useAuth();
+  const { theme, toggleTheme, isDark } = useTheme();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const getLinks = () => {
     const baseLinks = [
@@ -22,8 +27,10 @@ const Sidebar = () => {
       return [
         ...baseLinks,
         { name: 'Intelligence', path: '/disruptions', icon: Activity },
+        { name: 'Fleet Tracking', path: '/fleet', icon: MapPin },
+        { name: 'View Shipments', path: '/view-shipments', icon: Eye },
         { name: 'Manage Assets', path: '/manage', icon: Database },
-        { name: 'System Access', path: '/admin', icon: UserCog },
+        { name: 'Approve Shipments', path: '/admin/shipments', icon: CheckSquare },
       ];
     }
 
@@ -31,7 +38,9 @@ const Sidebar = () => {
       return [
         ...baseLinks,
         { name: 'Intelligence', path: '/disruptions', icon: Activity },
-        { name: 'Manage Assets', path: '/manage', icon: Database },
+        { name: 'Fleet Tracking', path: '/fleet', icon: MapPin },
+        { name: 'View Shipments', path: '/view-shipments', icon: Eye },
+        { name: 'Request Shipment', path: '/driver/create-shipment', icon: PlusCircle },
       ];
     }
 
@@ -47,60 +56,92 @@ const Sidebar = () => {
   const links = getLinks();
 
   return (
-    <div className="w-64 border-r border-zinc-900 flex flex-col h-full bg-black">
-      <div className="p-8 border-b border-zinc-900">
+    <div className="w-72 border-r border-border flex flex-col h-full bg-background transition-all duration-300">
+      <div className="p-8 border-b border-border/50">
         <div className="flex items-center gap-3 group px-2">
-          <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-            <Shield className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg shadow-accent/40 group-hover:rotate-6 transition-transform">
+            <Shield className="w-6 h-6 text-white" />
           </div>
-          <span className="text-xl font-black heading-hero">Sentinel<span className="text-zinc-500 font-medium">AI</span></span>
+          <div className="flex flex-col">
+            <span className="text-2xl font-l1-hero text-text-primary tracking-wider">Sentinel</span>
+            <span className="text-[10px] font-l5-micro text-accent -mt-1">Logistics AI</span>
+          </div>
         </div>
       </div>
 
-      <nav className="flex-1 px-4 py-8 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-4 py-8 space-y-1.5 overflow-y-auto custom-scrollbar">
         {links.map((link) => (
           <NavLink
             key={link.path}
             to={link.path}
             className={({ isActive }) => `
-              flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group
+              sidebar-link group
               ${isActive 
-                ? 'bg-zinc-900 text-white font-bold border border-zinc-800' 
-                : 'text-zinc-500 hover:text-white hover:bg-zinc-900/40'}
+                ? 'sidebar-link-active' 
+                : 'text-text-muted hover:text-text-primary hover:bg-surface/30'}
             `}
           >
-            <link.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            <span className="text-sm tracking-tight">{link.name}</span>
+            <link.icon className="w-5 h-5 transition-transform group-hover:scale-110" />
+            <span className="text-[13px] font-medium tracking-tight">{link.name}</span>
+            {link.path === '/disruptions' && (
+              <span className="ml-auto w-2 h-2 rounded-full bg-danger animate-pulse shadow-[0_0_8px_var(--color-danger)]"></span>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      <div className="p-6 border-t border-zinc-900 bg-zinc-950/50">
-        <div className="mb-4 px-4 py-3 bg-zinc-900/50 rounded-xl border border-zinc-800/50">
-            <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-              <Shield className="w-3 h-3 text-zinc-600" />
-              Security Clearance
-            </p>
-            <div className="flex items-center justify-between">
-              <p className={`text-[11px] font-black uppercase tracking-wider ${
-                role === 'Admin' ? 'text-red-500' : 
-                role === 'Manager' ? 'text-blue-500' : 
-                'text-zinc-400'
+      <div className="p-4 space-y-3 bg-surface/20 border-t border-border/50 backdrop-blur-sm">
+        {/* Security Clearance Badge */}
+        <div className="clay-card p-4 border-none !bg-surface/40">
+           <div className="flex items-center justify-between mb-2">
+              <span className="font-l5-micro text-text-muted">Security Clearance</span>
+              <Shield className={`w-3 h-3 ${role === 'Admin' ? 'text-danger' : 'text-accent'}`} />
+           </div>
+           <div className="flex items-end justify-between">
+              <span className={`text-base font-l2-card uppercase ${
+                role === 'Admin' ? 'text-danger' : 
+                role === 'Manager' ? 'text-accent' : 
+                'text-teal'
               }`}>
-                {role || 'Authenticating...'}
-              </p>
-              <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${
-                role ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' : 'bg-zinc-700'
-              }`} />
-            </div>
+                {role || 'Standard'}
+              </span>
+              <div className="flex gap-1">
+                 {[1, 2, 3].map(i => (
+                   <div key={i} className={`w-1 h-3 rounded-full ${i <= (role === 'Admin' ? 3 : role === 'Manager' ? 2 : 1) ? (role === 'Admin' ? 'bg-danger' : 'bg-accent') : 'bg-text-muted/20'}`}></div>
+                 ))}
+              </div>
+           </div>
         </div>
-        <button 
-          onClick={logout}
-          className="flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-500 hover:text-rose-400 hover:bg-rose-500/5 transition-all w-full group"
-        >
-          <LogOut className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          <span className="text-sm font-bold tracking-tight text-zinc-400 group-hover:text-rose-400">System Signoff</span>
-        </button>
+
+        {/* Theme & Settings Control */}
+        <div className="flex gap-2">
+          <button
+            onClick={toggleTheme}
+            className="flex-1 clay-card p-3 flex items-center justify-center hover:bg-surface/60 transition-colors group"
+            title="Toggle Protocol"
+          >
+            {isDark ? (
+              <Moon className="w-5 h-5 text-violet group-hover:rotate-12 transition-transform" />
+            ) : (
+              <Sun className="w-5 h-5 text-warn group-hover:rotate-12 transition-transform" />
+            )}
+          </button>
+          
+          <button
+            onClick={() => setSettingsOpen(!settingsOpen)}
+            className="flex-1 clay-card p-3 flex items-center justify-center hover:bg-surface/60 transition-colors group"
+          >
+            <Settings className={`w-5 h-5 text-text-muted group-hover:rotate-90 transition-transform ${settingsOpen ? 'text-accent' : ''}`} />
+          </button>
+
+          <button 
+            onClick={logout}
+            className="flex-1 clay-card p-3 flex items-center justify-center hover:bg-danger/10 hover:border-danger/20 group transition-all"
+            title="Terminate Session"
+          >
+            <LogOut className="w-5 h-5 text-text-muted group-hover:text-danger group-hover:translate-x-0.5 transition-all" />
+          </button>
+        </div>
       </div>
     </div>
   );

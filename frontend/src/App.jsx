@@ -11,6 +11,10 @@ import Disruptions from './pages/Disruptions';
 import AdminPanel from './pages/AdminPanel';
 import ManageShipments from './pages/ManageShipments';
 import DriverPortal from './pages/DriverPortal';
+import DriverCreateShipment from './pages/DriverCreateShipment';
+import AdminShipmentApproval from './pages/AdminShipmentApproval';
+import ViewShipments from './pages/ViewShipments';
+import LiveFleet from './pages/LiveFleet';
 
 const App = () => {
   return (
@@ -73,11 +77,41 @@ const App = () => {
             } 
           />
 
+          {/* Manager Routes */}
           <Route 
             path="/manage" 
             element={
-              <ProtectedRoute allowedRoles={['Admin', 'Manager']}>
+              <ProtectedRoute allowedRoles={['Admin']}>
                 <ManageShipments />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* View Shipments - Manager and Admin */}
+          <Route 
+            path="/view-shipments" 
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Manager']}>
+                <ViewShipments />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/fleet" 
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Manager']}>
+                <LiveFleet />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Driver Routes */}
+          <Route 
+            path="/driver/create-shipment" 
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Manager', 'Driver']}>
+                <DriverCreateShipment />
               </ProtectedRoute>
             } 
           />
@@ -87,6 +121,16 @@ const App = () => {
             element={
               <ProtectedRoute allowedRoles={['Driver']}>
                 <DriverPortal />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Admin Shipment Approval Route */}
+          <Route 
+            path="/admin/shipments" 
+            element={
+              <ProtectedRoute allowedRoles={['Admin']}>
+                <AdminShipmentApproval />
               </ProtectedRoute>
             } 
           />
