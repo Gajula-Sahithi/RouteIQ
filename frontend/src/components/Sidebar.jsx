@@ -127,12 +127,37 @@ const Sidebar = () => {
             )}
           </button>
           
-          <button
-            onClick={() => setSettingsOpen(!settingsOpen)}
-            className="flex-1 clay-card p-3 flex items-center justify-center hover:bg-surface/60 transition-colors group"
-          >
-            <Settings className={`w-5 h-5 text-text-muted group-hover:rotate-90 transition-transform ${settingsOpen ? 'text-accent' : ''}`} />
-          </button>
+          <div className="flex-1 relative flex">
+            <button
+              onClick={() => setSettingsOpen(!settingsOpen)}
+              className="w-full clay-card p-3 flex items-center justify-center hover:bg-surface/60 transition-colors group"
+            >
+              <Settings className={`w-5 h-5 text-text-muted group-hover:rotate-90 transition-transform ${settingsOpen ? 'text-accent' : ''}`} />
+            </button>
+            
+            {settingsOpen && (
+              <div className="absolute bottom-full left-0 mb-3 w-48 clay-card p-2 !bg-surface shadow-2xl flex flex-col gap-1 z-50 animate-in fade-in slide-in-from-bottom-2">
+                <div className="px-2 py-1.5 border-b border-border/50 mb-1">
+                  <span className="text-[10px] font-black text-text-tertiary uppercase tracking-widest">System Settings</span>
+                </div>
+                {(role === 'Admin' || role === 'Manager') && (
+                  <NavLink 
+                    to="/admin" 
+                    onClick={() => setSettingsOpen(false)}
+                    className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-background transition-colors text-text-primary text-xs font-bold"
+                  >
+                    <UserCog className="w-4 h-4 text-accent" />
+                    User Control
+                  </NavLink>
+                )}
+                {/* Fallback for non-admins to just show something if they click it */}
+                <div className="flex items-center gap-3 p-2.5 rounded-lg text-text-muted text-xs font-medium cursor-not-allowed opacity-50">
+                   <Settings className="w-4 h-4" />
+                   Preferences (Coming Soon)
+                </div>
+              </div>
+            )}
+          </div>
 
           <button 
             onClick={logout}
